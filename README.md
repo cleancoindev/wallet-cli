@@ -27,7 +27,11 @@ Prerequisite
 5) node wallet.js functioname argument
 
 examples- 
+
 node wallet.js info
+
 node wallet.js convertEthToMet amount minimumReturn
+
 node wallet.js convertMetToEth amount minimumReturn
+
 node wallet.js buyMet ethAmount
