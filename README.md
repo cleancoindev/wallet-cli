@@ -1,12 +1,15 @@
 # wallet-cli
 
 Prerequisite
- a) node v10 or above
- b) Ethereum address and mnemonic phrase
- c) Eth balance to pay for gas fee
+
+     a) node v10 or above
+ 
+     b) Ethereum address and mnemonic phrase
+ 
+     c) Eth balance to pay for gas fee
 
 
-1) Git clone 
+1) git clone https://github.com/autonomoussoftware/wallet-cli.git
 
 2) cd wallet-cli
 
