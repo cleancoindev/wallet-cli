@@ -1,0 +1,9 @@
+{
+  "node": "https://eth.wallet.metronome.io:8545",
+  "network": "mainnet"
+}
+
+// {
+//   "node": "http://127.0.0.1:8545",
+//   "network": "ropsten"
+// }
