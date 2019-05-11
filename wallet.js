@@ -2,10 +2,11 @@ const program = require('commander')
 const process = require('process')
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const Web3 = require('web3')
+const gasPrice = 10000000000
 const MetronomeContracts = require('metronome-contracts')
 var { node, network } = require('config')
-const mnemonic = process.env.phrase
-// const mnemonic = 'you actual mnemonic'
+var mnemonic = process.env.phrase
+// mnemonic = 'you actual mnemonic'
 const provider = new HDWalletProvider(mnemonic, node, 0, 1)
 const myAddresses = provider.addresses
 var web3 = new Web3(provider)
@@ -34,7 +35,7 @@ async function info (chain) {
 async function buyMet (value) {
   var output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance before', output)
-  var tx = await web3.eth.sendTransaction({ to: Auctions.options.address, value, from: myAddresses[0] })
+  var tx = await web3.eth.sendTransaction({ to: Auctions.options.address, value, from: myAddresses[0], gasPrice })
   output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance after', output)
   process.exit(0)
@@ -51,7 +52,7 @@ async function convertEthToMet (value, minReturn) {
   console.log('My MET balance before', output)
   output = await web3.eth.getBalance(myAddresses[0])
   console.log('My ETH balance before', output)
-  await AutonomousConverter.methods.convertEthToMet(minReturn).send({ from: myAddresses[0], value })
+  await AutonomousConverter.methods.convertEthToMet(minReturn).send({ from: myAddresses[0], value, gasPrice })
   output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance after', output)
   output = await web3.eth.getBalance(myAddresses[0])
@@ -66,12 +67,12 @@ async function convertEthToMet (value, minReturn) {
  * @param minReturn in MET wei
  */
 async function convertMetToEth (value, minReturn) {
-  await METToken.methods.approve(AutonomousConverter.options.address, value).send({ from: myAddresses[0] })
+  await METToken.methods.approve(AutonomousConverter.options.address, value).send({ from: myAddresses[0], gasPrice })
   var output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance before', output)
   output = await web3.eth.getBalance(myAddresses[0])
   console.log('My ETH balance before', output)
-  await AutonomousConverter.methods.convertMetToEth(value, minReturn).send({ from: myAddresses[0] })
+  await AutonomousConverter.methods.convertMetToEth(value, minReturn).send({ from: myAddresses[0], gasPrice })
   output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance after', output)
   output = await web3.eth.getBalance(myAddresses[0])
@@ -87,7 +88,7 @@ async function convertMetToEth (value, minReturn) {
  */
 async function transfer (to, value) {
   console.log('MET balance before', await METToken.methods.balanceOf(myAddresses[0]).call())
-  var tx = await METToken.methods.transfer(to, value).send({ from: myAddresses[0] })
+  var tx = await METToken.methods.transfer(to, value).send({ from: myAddresses[0], gasPrice })
   console.log('tx', tx)
   console.log('MET balance after', await METToken.methods.balanceOf(myAddresses[0]).call())
   process.exit(0)
@@ -99,8 +100,9 @@ async function transfer (to, value) {
  * @param tokenAmount MET wei amount to transfer to each recepient
  */
 async function multiTransfer (tokenAmount) {
+  tokenAmount = '0000000029A2241AF62C0000'
   const bitParam = []
-  const RECIPIENTS = [
+  var RECIPIENTS = [
     '0xc6b30145441bd12674286c83c1fcd702d2cca265',
     '0xd8252d2741a67c50519f70801fe9e21cf590910c'
   ]
@@ -110,14 +112,16 @@ async function multiTransfer (tokenAmount) {
     const metBalanceBefore = await METToken.methods.balanceOf(recipient).call()
     console.log('metBalanceBefore', metBalanceBefore)
   }
+
   try {
     console.log('MET balance before', await METToken.methods.balanceOf(myAddresses[0]).call())
-    var tx = await METToken.methods.multiTransfer(bitParam).send({ from: myAddresses[0] })
+    var tx = await METToken.methods.multiTransfer(bitParam).send({ from: myAddresses[0], gasPrice })
     console.log(tx)
     console.log('MET balance after', await METToken.methods.balanceOf(myAddresses[0]).call())
   } catch (e) {
     console.log(e)
   }
+
   for (let idx = 0; idx < RECIPIENTS.length; idx++) {
     const recipient = RECIPIENTS[idx]
     const metBalanceAfter = await METToken.methods.balanceOf(recipient).call()
