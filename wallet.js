@@ -6,7 +6,6 @@ const gasPrice = 10000000000
 const MetronomeContracts = require('metronome-contracts')
 var { node, network } = require('config')
 var phrase = process.env.phrase
-phrase = 'you actual mnemonic'
 const provider = new HDWalletProvider(phrase, node, 0, 1)
 const myAddresses = provider.addresses
 var web3 = new Web3(provider)
