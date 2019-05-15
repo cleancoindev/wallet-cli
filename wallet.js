@@ -2,7 +2,7 @@ const program = require('commander')
 const process = require('process')
 const HDWalletProvider = require('truffle-hdwallet-provider')
 const Web3 = require('web3')
-const gasPrice = 10000000000
+const gasPrice = 20000000000
 const MetronomeContracts = require('metronome-contracts')
 var { node, network } = require('config')
 var phrase = process.env.phrase
@@ -68,6 +68,7 @@ async function convertEthToMet (value, minReturn) {
  * @param minReturn in MET wei
  */
 async function convertMetToEth (value, minReturn) {
+  console.log('Approving')
   await METToken.methods.approve(AutonomousConverter.options.address, value).send({ from: myAddresses[0], gasPrice })
   var output = await METToken.methods.balanceOf(myAddresses[0]).call()
   console.log('My MET balance before', output)
